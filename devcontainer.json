@@ -1,0 +1,24 @@
+{
+	"name": "Ansible dev tools development container",
+	"image": "localhost/devtools-development-container:latest",
+	"containerEnv": {"PRE_COMMIT_HOME": "${containerWorkspaceFolder}/.cache/pre-commit"},
+	"runArgs": [
+		"--cap-add=SYS_ADMIN",
+		"--cap-add=SYS_RESOURCE",
+		"--device",
+		"/dev/fuse",
+		"--security-opt",
+		"seccomp=unconfined",
+		"--security-opt",
+		"label=disable",
+		"--security-opt",
+		"apparmor=unconfined",
+		"--userns=host",
+		"--hostname=ansible-dev-container",
+		"--volume",
+		"ansible-dev-tools-container-storage:/var/lib/containers",
+		"--volume",
+		"ansible-dev-tools-precommit-storage:/root/.cache/pre-commit"
+	],
+	"postCreateCommand": "PIP_CONSTRAINT=.config/constraints.txt /usr/bin/python3 -m pip install --root-user-action=ignore -e '.[dev,test,docs,server]'",
+}
